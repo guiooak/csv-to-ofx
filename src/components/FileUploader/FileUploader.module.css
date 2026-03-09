@@ -1,0 +1,26 @@
+.container {
+  text-align: center;
+  padding: 100px;
+}
+
+.inputFileLabel {
+  background-color: #3c74ff55;
+  border: solid 1px #3c74ff33;
+  padding: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.displayNone {
+  display: none;
+}
+
+.fileName {
+  padding: 32px;
+}
+
+.dragOver {
+  background-color: #ddd;
+  border: dashed 10px #999;
+}

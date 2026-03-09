@@ -1,0 +1,9 @@
+.downloadButton {
+  cursor: pointer;
+  display: none;
+  color: #3c74ff;
+}
+
+.visible {
+  display: inline-block;
+}

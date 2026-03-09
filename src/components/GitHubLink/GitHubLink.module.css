@@ -1,0 +1,10 @@
+.gitHubLink {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+}
+
+.link {
+  color: black;
+  text-decoration: none;
+}

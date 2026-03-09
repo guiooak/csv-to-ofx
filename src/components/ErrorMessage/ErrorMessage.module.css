@@ -1,0 +1,18 @@
+.errorMessage {
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 16px;
+  display: block;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 1.2rem;
+  cursor: pointer;
+  float: right;
+  margin-left: 10px;
+}

@@ -1,0 +1,21 @@
+.container {
+  text-align: center;
+  padding: 100px;
+  position: relative;
+}
+
+.gitHubLink {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+}
+
+.gitHubLink a {
+  color: black;
+  text-decoration: none;
+}
+
+.dragOver {
+  background-color: #ddd;
+  border: dashed 10px #999;
+}
