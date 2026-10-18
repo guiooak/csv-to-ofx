@@ -1,0 +1,105 @@
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 240px;
+  padding: 28px 8px 12px;
+  text-align: center;
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.check svg {
+  width: 24px;
+  height: 24px;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.source {
+  margin-top: 2px;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.stats {
+  display: flex;
+  gap: 32px;
+  margin: 20px 0 24px;
+}
+
+.stats dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stats dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms;
+}
+
+.download:hover {
+  background: var(--accent-hover);
+}
+
+.download svg {
+  width: 18px;
+  height: 18px;
+}
+
+.fileName {
+  margin-top: 8px;
+  max-width: 100%;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.reset {
+  margin-top: 20px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 150ms;
+}
+
+.reset:hover {
+  color: var(--ink);
+}

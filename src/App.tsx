@@ -1,9 +1,11 @@
 import { useState, useCallback } from "react";
+import Header from "./components/Header/Header";
 import FileUploader from "./components/FileUploader/FileUploader";
 import Loader from "./components/Loader/Loader";
-import DownloadButton from "./components/DownloadButton/DownloadButton";
+import ConversionResult, {
+  type ConversionData,
+} from "./components/ConversionResult/ConversionResult";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
-import GitHubLink from "./components/GitHubLink/GitHubLink";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import styles from "./App.module.css";
 import { parseCsvSemiColon } from "./services/csvParser";
@@ -14,29 +16,48 @@ import {
   buildOfxFileData,
 } from "./services/ofxBuilder";
 
+const INVALID_FILE_MESSAGE =
+  "Não foi possível ler este arquivo. Envie o CSV exportado da fatura do cartão Sicredi.";
+
+const STEPS = [
+  {
+    title: "Exporte a fatura",
+    text: "No app ou internet banking Sicredi, baixe a fatura do cartão em CSV.",
+  },
+  {
+    title: "Envie o arquivo",
+    text: "Arraste o CSV para a área acima ou escolha no computador.",
+  },
+  {
+    title: "Importe o OFX",
+    text: "Baixe o OFX e importe no seu app de gestão financeira.",
+  },
+];
+
 function App() {
   const [loading, setLoading] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState<string>("");
-  const [fileName, setFileName] = useState<string>("");
+  const [result, setResult] = useState<ConversionData | null>(null);
   const [error, setError] = useState<string>("");
 
   const handleFileSelect = useCallback(async (file: File) => {
     setError("");
-    setDownloadUrl("");
+    setResult(null);
     setLoading(true);
 
     try {
       const csvContent = await file.text();
 
+      let parsedCsvContent: string[][];
       try {
-        parseCsvSemiColon(csvContent);
+        parsedCsvContent = parseCsvSemiColon(csvContent);
       } catch {
-        throw new Error(
-          "Ops! You uploaded an invalid CSV file. Try again with a valid one.",
-        );
+        throw new Error(INVALID_FILE_MESSAGE);
       }
 
-      const parsedCsvContent = parseCsvSemiColon(csvContent);
+      if (parsedCsvContent.length === 0) {
+        throw new Error(INVALID_FILE_MESSAGE);
+      }
+
       fixInstallmentDates(parsedCsvContent);
 
       const dates = parsedCsvContent.map((t) => t[0]);
@@ -45,19 +66,31 @@ function App() {
       const ofxRawData = buildOfxRawData(parsedCsvContent, startDate, endDate);
       const ofxFileData = buildOfxFileData(ofxRawData);
       const ofxFileName = buildFileName(startDate, endDate);
+      const transactionCount = parsedCsvContent.filter(
+        ([date, description, , value]) => date && description && value,
+      ).length;
 
-      // Simulate processing delay (2 seconds as in original)
+      // Short delay so the loading state is perceptible
       setTimeout(() => {
         setLoading(false);
-        setDownloadUrl(ofxFileData);
-        setFileName(ofxFileName);
-      }, 2000);
-    } catch (err) {
+        setResult({
+          href: ofxFileData,
+          fileName: ofxFileName,
+          sourceName: file.name,
+          startDate,
+          endDate,
+          transactionCount,
+        });
+      }, 600);
+    } catch {
       setLoading(false);
-      setError(
-        err instanceof Error ? err.message : "An unknown error occurred",
-      );
+      setError(INVALID_FILE_MESSAGE);
     }
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setResult(null);
+    setError("");
   }, []);
 
   const handleDismissError = useCallback(() => {
@@ -66,22 +99,72 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className={styles.container}>
-        <GitHubLink />
-        <h1>Convert CSV to OFX</h1>
-        <br />
-        <br />
-        <FileUploader onFileSelect={handleFileSelect} />
-        <br />
-        <DownloadButton
-          href={downloadUrl}
-          fileName={fileName}
-          visible={!!downloadUrl}
-        />
-        {loading && <Loader />}
-        {error && (
-          <ErrorMessage message={error} onDismiss={handleDismissError} />
-        )}
+      <div className={styles.page}>
+        <Header />
+
+        <main className={styles.main}>
+          <section className={styles.hero}>
+            <p className={styles.eyebrow}>Cartão de crédito Sicredi</p>
+            <h1 className={styles.title}>
+              Converta a fatura em CSV para OFX
+            </h1>
+            <p className={styles.subtitle}>
+              Gere um arquivo OFX pronto para importar no seu app de finanças,
+              com parcelas já lançadas no mês certo.
+            </p>
+          </section>
+
+          <section className={styles.card} aria-live="polite">
+            {loading ? (
+              <Loader />
+            ) : result ? (
+              <ConversionResult data={result} onReset={handleReset} />
+            ) : (
+              <FileUploader onFileSelect={handleFileSelect} />
+            )}
+            {error && (
+              <ErrorMessage message={error} onDismiss={handleDismissError} />
+            )}
+          </section>
+
+          <p className={styles.privacy}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect
+                x="5"
+                y="10.5"
+                width="14"
+                height="9.5"
+                rx="2"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
+              <path
+                d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              />
+            </svg>
+            Tudo acontece no seu navegador. Nenhum dado é enviado.
+          </p>
+
+          <ol className={styles.steps}>
+            {STEPS.map((step, index) => (
+              <li key={step.title} className={styles.step}>
+                <span className={styles.stepNumber}>{index + 1}</span>
+                <div>
+                  <h2 className={styles.stepTitle}>{step.title}</h2>
+                  <p className={styles.stepText}>{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </main>
+
+        <footer className={styles.footer}>
+          Projeto pessoal e open source, sem vínculo com o Sicredi.
+        </footer>
       </div>
     </ErrorBoundary>
   );

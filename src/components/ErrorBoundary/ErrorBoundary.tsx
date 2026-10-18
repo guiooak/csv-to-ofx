@@ -28,7 +28,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     if (this.state.hasError && this.state.error) {
       return (
         <div className={styles.errorBoundary}>
-          <h2 className={styles.title}>Something went wrong</h2>
+          <h2 className={styles.title}>Algo deu errado</h2>
           <p>{this.state.error.message}</p>
           <pre className={styles.message}>{this.state.error.stack}</pre>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./ErrorMessage.module.css";
 
 interface ErrorMessageProps {
@@ -7,25 +7,40 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onDismiss }) => {
-  const [visible, setVisible] = useState(true);
-
-  if (!visible) return null;
-
-  const handleDismiss = () => {
-    setVisible(false);
-    onDismiss?.();
-  };
-
   return (
-    <div className={styles.errorMessage}>
-      <button
-        className={styles.closeButton}
-        onClick={handleDismiss}
-        aria-label="Dismiss error"
+    <div className={styles.errorMessage} role="alert">
+      <svg
+        className={styles.icon}
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
       >
-        &times;
-      </button>
-      {message}
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M12 7.5v5.5m0 3v.01"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+      <p className={styles.text}>{message}</p>
+      {onDismiss && (
+        <button
+          className={styles.closeButton}
+          onClick={onDismiss}
+          aria-label="Fechar mensagem de erro"
+        >
+          &times;
+        </button>
+      )}
     </div>
   );
 };

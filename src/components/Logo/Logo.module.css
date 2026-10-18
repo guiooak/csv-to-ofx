@@ -1,0 +1,31 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.wordmark {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.from {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.arrow {
+  color: var(--accent);
+  margin: 0 2px;
+}
+
+.to {
+  color: var(--ink);
+}

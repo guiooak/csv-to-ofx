@@ -1,26 +1,71 @@
-.container {
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 240px;
+  padding: 32px 24px;
+  border: 1.5px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
   text-align: center;
-  padding: 100px;
-}
-
-.inputFileLabel {
-  background-color: #3c74ff55;
-  border: solid 1px #3c74ff33;
-  padding: 16px;
-  border-radius: 5px;
   cursor: pointer;
-  display: inline-block;
+  transition:
+    border-color 150ms,
+    background-color 150ms;
 }
 
-.displayNone {
-  display: none;
-}
-
-.fileName {
-  padding: 32px;
-}
-
+.dropzone:hover,
 .dragOver {
-  background-color: #ddd;
-  border: dashed 10px #999;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.dropzone:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Visually hidden but still focusable by keyboard */
+.input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.browse {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
